@@ -1,5 +1,17 @@
 #include "shell.h"
 
+int callExecvp(char **args, char* string){
+  char *function_name = malloc(sizeof(char)*110);
+  sprintf(function_name, "/mnt/c/Users/Wilbert Aristo/Documents/GitHub/Programming-Assignment-1/PA1/shellPrograms/%s", string);
+  int return_value = execvp(function_name, args);
+  if (return_value == -1){
+    printf("%s function failed to run\n", string);
+    return -1;
+  }
+
+  return 1;
+}
+
 /*
  List all files matching the name in args[1] under current directory and subdirectories
 */
@@ -15,7 +27,8 @@ int shellFind(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellFind if execvp fails to allow loop to continue
 
-  return 1;
+  int result = callExecvp(args, "find");
+  return result;
 }
 
 /**
@@ -32,7 +45,8 @@ int shellDisplayFile(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellDisplayFile if execvp fails to allow loop to continue
 
-  return 1;
+  int result = callExecvp(args, "display");
+  return result;
 }
 
 /*
@@ -50,7 +64,8 @@ int shellListDirAll(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellListDirAll if execvp fails to allow loop to continue
 
-  return 1;
+  int result = callExecvp(args, "listdirall");
+  return result;
 }
 
 /*
@@ -67,7 +82,8 @@ int shellListDir(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellListDir
 
-  return 1;
+  int result = callExecvp(args, "listdir");
+  return result;
 }
 
 /**
@@ -85,7 +101,8 @@ int shellCountLine(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellCountLine if execvp fails to allow loop to continue
 
-  return 1;
+  int result = callExecvp(args, "countline");
+  return result;
 }
 
 /**
@@ -102,7 +119,8 @@ int shellSummond(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellDaemonize if execvp fails to allow loop to continue
 
-  return 1;
+  int result = callExecvp(args, "summond");
+  return result;
 }
 
 
@@ -121,7 +139,8 @@ int shellCheckDaemon(char **args)
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellCheckDaemon if execvp fails to allow loop to continue
 
-  return 1;
+  int result = callExecvp(args, "checkdaemon");
+  return result;
 }
 
 /**
@@ -368,7 +387,7 @@ void shellLoop(void)
   char **args; // to tokenize them as arguments separated by spaces
   int status;  // to tell the shell program whether to terminate shell or not
 
-  /** TASK 4 **/
+  /** TASK 5 **/
   //write a loop where you do the following:
 
   // 1. print the message prompt
