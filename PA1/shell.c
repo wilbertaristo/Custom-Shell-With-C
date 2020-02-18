@@ -6,10 +6,8 @@ int callExecvp(char **args, char* string){
   int return_value = execvp(function_name, args);
   if (return_value == -1){
     printf("%s function failed to run\n", string);
-    return -1;
+    return 1;
   }
-
-  return 1;
 }
 
 /*
@@ -276,6 +274,7 @@ int shellExecuteInput(char **args)
   // 7. If args[0] is not in builtin_command, print out an error message to tell the user that command doesn't exist and return 1
   int result;
 
+
   if (args[0] == NULL){
     return 1;
   } else {
@@ -294,9 +293,21 @@ int shellExecuteInput(char **args)
           } else { // parent process
               printf("Fork works, waiting for child\n");
               // wait until child process is finished
-              waitpid(pid, NULL, WUNTRACED);
+              int exit_status = 0;
+              waitpid(pid, &exit_status, WUNTRACED);
+
+              if (WIFEXITED(exit_status)){
+                result = WEXITSTATUS(exit_status);
+              } else {
+                result = 9;
+              }
+              if (result == 9){
+                printf("Premature Death!\n");
+              } else if (result != 1){
+                printf("System Error! %d \n",exit_status);
+              }
           }
-          return result;
+          return 1;
         } else {
           // if it is cd, help, exit, usage, no need to fork. just execute the function
           result = builtin_commandFunc[i](args);
@@ -386,6 +397,7 @@ void shellLoop(void)
   char *line;  // to accept the line of string from user
   char **args; // to tokenize them as arguments separated by spaces
   int status;  // to tell the shell program whether to terminate shell or not
+  bool running = true;
 
   /** TASK 5 **/
   //write a loop where you do the following:
@@ -400,26 +412,27 @@ void shellLoop(void)
   // 8. free memory location containing char* to the first letter of each word in the input string
   // 9. check return value of shellExecuteInput. If 1, continue the loop (point 1) again and prompt for another input. Else, exit shell. 
 
+  while(running){
+    printf("CSEShell>");
+    fflush(stdout);
 
+    line = shellReadLine();
+    args = shellTokenizeInput(line);
+    status = shellExecuteInput(args);
 
+    free(line);
+    free(args);
 
+    if(status != 1){
+      running = false;
+    }
+  }
 }
 
 int main(int argc, char **argv)
 {
-
-  printf("Shell Run successful. Running now: \n");
-
-  char* line = shellReadLine();
-  printf("The fetched line is : %s \n", line);
-
-  char** args = shellTokenizeInput(line);
-  printf("The first token is %s \n", args[0]);
-  printf("The second token is %s \n", args[1]);
-
-  shellExecuteInput(args);
-  // // Run command loop
-  // shellLoop();
+  // Run command loop
+  shellLoop();
 
   return 0;
 }

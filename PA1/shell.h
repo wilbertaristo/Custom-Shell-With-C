@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h> 
+#include <stdbool.h>
 #include <dirent.h>
 #include <errno.h>
 /* "readdir" etc. are defined here. */
