@@ -5,7 +5,6 @@ Count the number of lines in a file
 */
 int shellCountLine_code(char **args)
 {
-
     /** TASK 6  **/
     // ATTENTION: you need to implement this function from scratch and not to utilize other system program to do this
     // 1. Given char** args, open file in READ mode based on the filename given in args[1] using fopen()
@@ -20,14 +19,15 @@ int shellCountLine_code(char **args)
     int count = 0;
     char* buffer;
     size_t buffersize = 50;
-    printf("before wait");
+     buffer = (char*) malloc(sizeof(char) * buffersize);
     while(result != -1){
         result = getline(&buffer,&buffersize,floc);
-        count ++;
-        printf("%d",count);
+        if(result != -1){
+            count ++;
+        }
     }
     fclose(floc);
-    printf("%d",count);
+    printf("This text file contains %d lines",count);
     
     // 4. Loop, as long as getline() does not return -1, keeps reading and increment the count
     // 6. Close the FILE*
