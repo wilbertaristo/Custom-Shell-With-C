@@ -24,8 +24,15 @@ static int create_daemon()
 
     // 1. Fork() from the parent process
     pid_t pid = fork();
-    if (pid == 0){ // 3. On child process (this is intermediate process), call setsid() so that the child becomes session leader to lose the controlling TTY
-        setsid();
+    if (pid < 0){
+        printf("Fork Failed!");
+        exit(-1);
+    } else if (pid == 0){ // 3. On child process (this is intermediate process), call setsid() so that the child becomes session leader to lose the controlling TTY
+        int sid_result = setsid();
+        if (sid_result == -1){
+            printf("setsid() failed!");
+            exit(-1);
+        }
     } else { // 2. Close parent with exit(1)
         exit(1);
     }
@@ -35,7 +42,10 @@ static int create_daemon()
     signal(SIGHUP, SIG_IGN);
 
     pid_t pid2 = fork();
-    if (pid2 == 0){ // 6. Child process (the daemon) set new file permissions using umask(0). Daemon's PPID at this point is 1 (the init)
+    if (pid2 < 0){
+        printf("Intermediate Process Fork Failed!");
+        exit(-1);
+    } else if (pid2 == 0){ // 6. Child process (the daemon) set new file permissions using umask(0). Daemon's PPID at this point is 1 (the init)
         umask(0);
     } else { // 5. Fork() again, parent (the intermediate) process terminates
         exit(1);
