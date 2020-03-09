@@ -10,6 +10,10 @@ int shellCheckDaemon_code()
    sprintf(command, "ps -efj | grep summond  | grep -v tty > output.txt");
 
    // TODO: Execute the command using system(command) and check its return value
+   int return_value = system(command);
+   if (return_value == -1){
+      exit(1);
+   }
 
    free(command);
 
