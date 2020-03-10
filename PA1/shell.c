@@ -2,7 +2,7 @@
 
 int callExecvp(char **args, char* string){
   char *function_name = malloc(sizeof(char)*110);
-  sprintf(function_name, "/Users/ryan/Desktop/ccode/Programming-Assignment-1/PA1/shellPrograms/%s", string);
+  sprintf(function_name, "/mnt/c/Users/Wilbert Aristo/Documents/GitHub/Programming-Assignment-1/PA1/shellPrograms/%s", string);
   int return_value = execvp(function_name, args);
   if (return_value == -1){
     printf("%s function failed to run\n", string);
@@ -141,6 +141,7 @@ int shellCheckDaemon(char **args)
   return result;
 }
 
+
 /**
    Allows one to change directory 
  */
@@ -199,6 +200,11 @@ int shellExit(char **args)
 int shellUsage(char **args)
 {
   int functionIndex = -1;
+
+  if (args[1] == NULL){
+    printf("Type: usage example_command\n");
+    return 1;
+  }
 
   // Check if the commands exist in the command list
   for (int i = 0; i < numOfBuiltinFunctions(); i++)
